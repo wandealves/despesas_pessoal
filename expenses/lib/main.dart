@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+//import 'package:flutter/services.dart';
 import 'dart:math';
 
 import 'components/transaction_list.dart';
@@ -12,9 +12,9 @@ main() => runApp(ExpensesApp());
 class ExpensesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
+    /* SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
-    ]);
+    ]);*/
 
     return MaterialApp(
       home: MyHomePage(),
@@ -47,6 +47,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _transactions = [];
+  bool _showChart = false;
 
   List<Transaction> get _recentTransactions {
     return _transactions.where((tr) {
@@ -109,14 +110,29 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              height: availableHeigth * 0.35,
-              child: Chart(_recentTransactions),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('Exibir Gráfico'),
+                Switch(
+                  value: _showChart,
+                  onChanged: (value) {
+                    setState(() {
+                      _showChart = value;
+                    });
+                  },
+                ),
+              ],
             ),
-            Container(
-              height: availableHeigth * 0.65,
-              child: TransactionList(_transactions, _removeTransaction),
-            ),
+            _showChart
+                ? Container(
+                    height: availableHeigth * 0.35,
+                    child: Chart(_recentTransactions),
+                  )
+                : Container(
+                    height: availableHeigth * 0.65,
+                    child: TransactionList(_transactions, _removeTransaction),
+                  ),
           ],
         ),
       ),
